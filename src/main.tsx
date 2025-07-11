@@ -4,11 +4,13 @@ import "./index.css";
 
 import { routeTree } from "./routeTree.gen.ts";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { ToastContainer } from "react-toastify";
 
 const router = createRouter({ routeTree });
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <RouterProvider router={router} />
-    </StrictMode>,
+  <StrictMode>
+    <RouterProvider router={router} />
+    <ToastContainer />
+  </StrictMode>,
 );

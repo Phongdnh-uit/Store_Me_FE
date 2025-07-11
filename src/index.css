@@ -128,9 +128,17 @@
 
 @layer components {
   .custom-textbox {
-    @apply bg-white! h-[72px]! rounded-[15px]! border! border-[var(--secondary-foreground)]! placeholder:text-[var(--secondary-foreground)]! text-[20px]! hover:border-[var(--primary-blue)]! focus:ring-2 focus:ring-blue-300! focus:border-[var(--primary-blue)]! transition-colors duration-200 ease-in-out;
+    @apply bg-white! h-[72px]! rounded-[15px]! border! border-[var(--secondary-foreground)]! placeholder:text-[var(--secondary-foreground)]! text-[20px]! hover:border-[var(--primary-blue)]! focus:ring-2 focus:ring-blue-200! focus:border-[var(--primary-blue)]! transition-colors duration-200 ease-in-out aria-[invalid=true]:border-destructive! aria-[invalid=true]:ring-red-200!;
   }
   .custom-required-label {
     @apply text-[20px]! text-[var(--primary-blue)]! after:content-['*'] after:text-red-500;
+  }
+
+  .custom-primary-button {
+    @apply bg-[var(--primary-blue)]! text-white! text-[20px]! h-[72px]! w-full! rounded-[15px]!;
+  }
+
+  .custom-outline-button {
+    @apply bg-zinc-50! text-zinc-900! text-[20px]! h-[72px]! w-full! rounded-[15px]! border! border-[var(--secondary-foreground)]!;
   }
 }
