@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
+import { login } from "@/services/authService";
 
 export default function LoginPage() {
   const form = useForm<LoginRequestType>({
@@ -27,15 +28,16 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginRequestType) => {
-    if (data.email === "admin@gmail.com" && data.password === "admin123") {
-      toast.success("Login successful!", {
-        position: "top-center",
+    login(data)
+      .then((res) => {
+        if (res.statusCode === 200) {
+          toast.success("Login successful!");
+        }
+      })
+      .catch((error) => {
+        toast.error(`Login failed: ${error.message}`);
+        console.error("Login error:", error);
       });
-    } else {
-      toast.error("Invalid email or password. Please try again.", {
-        position: "top-center",
-      });
-    }
   };
 
   return (
