@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -15,58 +9,75 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { MESSAGES } from "@/constants/message";
-import { forgotPassword } from "@/services/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 const formSchema = z.object({
-    email: z.email(MESSAGES.VALIDATION.INVALID_EMAIL),
+    newPassword: z.string(),
+    confirmPassword: z.string(),
 });
 
 type formDataType = z.infer<typeof formSchema>;
 
-export default function ForgotPasswordPage() {
+export default function ResetPasswordPage() {
     const form = useForm<formDataType>({
         defaultValues: {
-            email: "",
+            newPassword: "",
+            confirmPassword: "",
         },
         mode: "onSubmit",
         resolver: zodResolver(formSchema),
     });
     const onSubmit = (data: formDataType) => {
-        forgotPassword(data.email);
+        console.log(data.newPassword);
     };
 
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <div className="fixed top-0 w-full h-[100px] bg-white"></div>
-            <Card className="w-[600px] h-[400px]">
+            <Card className="w-[600px] h-[500px]">
                 <CardHeader>
-                    <CardTitle className="text-[30px]">Forgot password?</CardTitle>
-                    <CardDescription className="text-[20px]">
-                        Enter the email address, and we will send you a link to reset your
-                        password.
-                    </CardDescription>
+                    <CardTitle className="text-[30px]">Reset Password</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             <FormField
-                                name="email"
+                                name="newPassword"
                                 control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="custom-required-label">
-                                            email
+                                            new password
                                         </FormLabel>
                                         <FormControl>
                                             <Input
                                                 className="custom-textbox"
                                                 {...field}
-                                                placeholder="Enter your email address"
+                                                placeholder="Enter your new password"
+                                            />
+                                        </FormControl>
+                                        <div className="min-h-[17px]">
+                                            <FormMessage />
+                                        </div>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="confirmPassword"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="custom-required-label">
+                                            confirm password
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                className="custom-textbox"
+                                                {...field}
+                                                placeholder="Confirm your new password"
                                             />
                                         </FormControl>
                                         <div className="min-h-[17px]">
