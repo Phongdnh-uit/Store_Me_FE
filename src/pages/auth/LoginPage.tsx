@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
+import { login } from "@/services/authService";
 
 export default function LoginPage() {
   const form = useForm<LoginRequestType>({
@@ -27,15 +28,16 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginRequestType) => {
-    if (data.email === "admin@gmail.com" && data.password === "admin123") {
-      toast.success("Login successful!", {
-        position: "top-center",
+    login(data)
+      .then((res) => {
+        if (res.statusCode === 200) {
+          toast.success("Login successful!");
+        }
+      })
+      .catch((error) => {
+        toast.error(`Login failed: ${error.message}`);
+        console.error("Login error:", error);
       });
-    } else {
-      toast.error("Invalid email or password. Please try again.", {
-        position: "top-center",
-      });
-    }
   };
 
   return (
@@ -85,7 +87,7 @@ export default function LoginPage() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="custom-textbox"
+                          className="custom-textbox pr-11"
                           placeholder="Enter your password"
                         />
                       </FormControl>
@@ -125,12 +127,9 @@ export default function LoginPage() {
                 Forgot Password?{" "}
               </span>
               <motion.div
-                variants={{
-                  rest: { width: 0 },
-                  hover: { width: "100%" },
-                }}
+                variants={drawLineVariants}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="absolute bottom-0 left-0 h-[2px] bg-[var(--primary-blue)]"
+                className="absolute bottom-0 left-1/2 translate-x-[-50%] h-[2px] bg-[var(--primary-blue)]"
               />
             </motion.div>
             <Separator className="mt-3" />
@@ -147,12 +146,9 @@ export default function LoginPage() {
                   Sign Up
                 </span>
                 <motion.div
-                  variants={{
-                    rest: { width: 0 },
-                    hover: { width: "100%" },
-                  }}
+                  variants={drawLineVariants}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute bottom-0 left-0 h-[2px] bg-[var(--primary-blue)]"
+                  className="absolute bottom-0 left-1/2 translate-x-[-50%] h-[2px] bg-[var(--primary-blue)]"
                 />
               </motion.div>
             </div>
@@ -163,3 +159,8 @@ export default function LoginPage() {
     </div>
   );
 }
+
+const drawLineVariants = {
+  rest: { width: 0 },
+  hover: { width: "100%" },
+};
