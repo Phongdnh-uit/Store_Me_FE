@@ -16,6 +16,7 @@ import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
 import { login } from "@/services/authService";
+import { Link } from "@tanstack/react-router";
 
 export default function LoginPage() {
   const form = useForm<LoginRequestType>({
@@ -142,9 +143,12 @@ export default function LoginPage() {
                 initial="rest"
                 whileHover="hover"
               >
-                <span className="text-[var(--primary-blue)] text-[20px]">
+                <Link
+                  to={"/auth/register"}
+                  className="text-[var(--primary-blue)] text-[20px]"
+                >
                   Sign Up
-                </span>
+                </Link>
                 <motion.div
                   variants={drawLineVariants}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
