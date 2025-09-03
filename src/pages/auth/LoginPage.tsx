@@ -17,6 +17,10 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
 import { login } from "@/services/authService";
 import { Link } from "@tanstack/react-router";
+import {
+  ACCESS_TOKEN_STORAGE_KEY,
+  REFRESH_TOKEN_STORAGE_KEY,
+} from "@/constants/appConstant";
 
 export default function LoginPage() {
   const form = useForm<LoginRequestType>({
@@ -33,6 +37,10 @@ export default function LoginPage() {
       .then((res) => {
         if (res.statusCode === 200) {
           toast.success("Login successful!");
+          const accessToken = res.data?.accessToken as string;
+          const refreshToken = res.data?.refreshToken as string;
+          localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+          localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
         }
       })
       .catch((error) => {

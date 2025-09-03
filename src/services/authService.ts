@@ -1,8 +1,9 @@
-import { ApiResponseSchema, type ApiResponseType } from "@/types/apiResponse";
+import { type ApiResponseType } from "@/types/global";
 import type { LoginRequestType } from "@/types/auth";
 import { LoginResponseSchema } from "@/types/auth";
 import axios from "axios";
 import z from "zod";
+import { fetchApiResponse } from "@/utils/parseApiResponse";
 
 const BACKEND_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:8080/api/v1";
@@ -14,27 +15,14 @@ export const login = async (
 ): Promise<ApiResponseType<typeof LoginResponseSchema>> => {
   const response = await axios.post(AUTH_URL + `/login`, request);
 
-  const LoginApiResponseSchema = ApiResponseSchema(LoginResponseSchema);
-
-  const result = LoginApiResponseSchema.safeParse(response.data);
-  if (!result.success) {
-    throw new Error("Invalid response from server");
-  }
-  return result.data;
+  return await fetchApiResponse(response, LoginResponseSchema);
 };
 
 export const refreshAccessToken = async (request: {
   refreshToken: string;
 }): Promise<ApiResponseType<typeof LoginResponseSchema>> => {
   const response = await axios.post(AUTH_URL + `/refresh-token`, request);
-
-  const LoginApiResponseSchema = ApiResponseSchema(LoginResponseSchema);
-
-  const result = LoginApiResponseSchema.safeParse(response.data);
-  if (!result.success) {
-    throw new Error("Invalid response from server");
-  }
-  return result.data;
+  return await fetchApiResponse(response, LoginResponseSchema);
 };
 
 export const forgotPassword = async (
@@ -43,12 +31,5 @@ export const forgotPassword = async (
   const response = await axios.post(
     AUTH_URL + `/forgot-password?email=${email}`,
   );
-
-  const ForgotPasswordApiResponseSchema = ApiResponseSchema(z.null());
-
-  const result = ForgotPasswordApiResponseSchema.safeParse(response.data);
-  if (!result.success) {
-    throw new Error("Invalid response from server");
-  }
-  return result.data;
+  return await fetchApiResponse(response, z.null());
 };

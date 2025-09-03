@@ -8,44 +8,49 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { cn } from "@/lib/utils";
+
+interface DensitySelectProps {
+  density: "compact" | "normal" | "flexible";
+  setDensity: (density: "compact" | "normal" | "flexible") => void;
+  className?: string;
+}
 
 export default function DensitySelect({
   density,
   setDensity,
-}: {
-  density: "compact" | "normal" | "flexible";
-  setDensity: (density: "compact" | "normal" | "flexible") => void;
-}) {
+  className,
+}: DensitySelectProps) {
   return (
     <Select value={density} onValueChange={setDensity}>
-      <SelectTrigger className="ml-auto w-[180px]">
+      <SelectTrigger
+        className={cn(
+          "h-10! px-3 border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white flex items-center gap-2 transition-colors rounded-md [&_svg]:!text-blue-500 hover:[&_svg]:!text-white",
+          className,
+        )}
+      >
         <SelectValue placeholder={density} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Density</SelectLabel>
-          <SelectItem value="compact" className="hover:!bg-purple-200/40">
-            <div className="flex items-center gap-2">
-              <Rows4 className="h-4 w-4" />
-              Compact
-            </div>
+          <SelectItem
+            value="compact"
+            className="flex items-center gap-2 cursor-pointer hover:bg-purple-200/40 data-[state=checked]:bg-purple-100/50"
+          >
+            <Rows4 className="h-4 w-4" /> Compact
           </SelectItem>
           <SelectItem
             value="normal"
-            className="flex items-center gap-2 hover:!bg-purple-200/40"
+            className="flex items-center gap-2 cursor-pointer hover:bg-purple-200/40 data-[state=checked]:bg-purple-100/50"
           >
-            <div className="flex items-center gap-2">
-              <Rows3 className="h-4 w-4" /> Normal
-            </div>
+            <Rows3 className="h-4 w-4" /> Normal
           </SelectItem>
           <SelectItem
             value="flexible"
-            className="flex items-center gap-2 hover:!bg-purple-200/40"
+            className="flex items-center gap-2 cursor-pointer hover:bg-purple-200/40 data-[state=checked]:bg-purple-100/50"
           >
-            <div className="flex items-center gap-2">
-              <Rows2 className="h-4 w-4" />
-              Flexible
-            </div>
+            <Rows2 className="h-4 w-4" /> Flexible
           </SelectItem>
         </SelectGroup>
       </SelectContent>

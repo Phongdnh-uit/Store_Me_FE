@@ -1,23 +1,156 @@
+import { AdvancedFilter } from "@/components/AdvancedFilter";
+import { ColumnVisibilitySelect } from "@/components/ColumnVisibilitySelect";
 import { DataTable } from "@/components/DataTable";
 import DensitySelect from "@/components/DensitySelect";
+import { PageTitle } from "@/components/PageTitle";
+import { PaginationBar } from "@/components/PaginationBar";
+import SearchBar from "@/components/SearchBar";
+import { Button } from "@/components/ui/button";
 import { useDataTable } from "@/hooks/useDataTable";
+import { getUsers } from "@/services/userService";
 import { UserResponseSchema, type UserResponseType } from "@/types/user";
 import {
   createColumnsFromSchema,
   createSelectionColumn,
 } from "@/utils/createColumn";
+import { FileDown, Filter, ListOrdered, RefreshCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const UserListPage = () => {
   const schemaColumns = createColumnsFromSchema(UserResponseSchema, []);
   const columns = [createSelectionColumn<UserResponseType>(), ...schemaColumns];
+  const [data, setData] = useState<UserResponseType[]>([]);
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(10);
   const { table, density, setDensity } = useDataTable<UserResponseType>({
     columns,
-    data: [],
+    data,
   });
+  useEffect(() => {
+    const result = getUsers({ page: 0, size: 10 });
+    result.then((data) => {
+      setData(data.data?.content ?? []);
+    });
+  }, []);
   return (
-    <div>
-      <DensitySelect density={density} setDensity={setDensity} />
-      <DataTable name="User Management" table={table} />
+    <div className="relative min-h-screen bg-gray-100">
+      <main className="absolute inset-4 bg-white rounded-2xl shadow-md p-4 overflow-auto">
+        <PageTitle
+          name="Users Management"
+          breadcrumbList={[
+            { name: "Home", href: "/" },
+            { name: "Users", href: "/manage/user" },
+          ]}
+        />
+        <div className="flex justify-between items-center mb-4">
+          <div></div>
+          <Button className="relative overflow-hidden group bg-blue-500 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 transition-all ease-out duration-300 h-10 cursor-pointer">
+            <span className="absolute right-0 w-8 h-32 -mt-12 bg-white opacity-10 rotate-12 translate-x-12 transition-all duration-1000 ease group-hover:-translate-x-40"></span>
+            <span className="relative font-semibold">Add user</span>
+          </Button>
+        </div>
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 w-full">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 flex-1">
+            <SearchBar
+              onSearch={() => {}}
+              className="h-10 flex-1 min-w-[150px] md:min-w-[200px]"
+            />
+            <Button
+              variant="outlinePrimary"
+              size="lg"
+              className="sm:flex-none min-w-[80px]"
+              onClick={() => setOpenFilter(true)}
+            >
+              <Filter className="size-5 mr-1" />
+              <span className="hidden sm:inline">Filter</span>
+            </Button>
+            <Button
+              variant="outlinePrimary"
+              size="lg"
+              className="sm:flex-none min-w-[80px]"
+            >
+              <ListOrdered className="size-5 mr-1" />
+              <span className="hidden sm:inline">Sort</span>
+            </Button>
+            <Button
+              variant="outlinePrimary"
+              size="lg"
+              className="sm:flex-none min-w-[50px]"
+            >
+              <RefreshCcw className="size-5" />
+            </Button>
+          </div>
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-end gap-2 flex-1">
+            <Button
+              variant="outlineSecondary"
+              size="lg"
+              className="flex-1 sm:flex-none min-w-[100px]"
+            >
+              <FileDown className="size-5 mr-1" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
+            <ColumnVisibilitySelect
+              table={table}
+              className="flex-1 sm:flex-none min-w-[120px]"
+            />
+            <DensitySelect
+              density={density}
+              setDensity={setDensity}
+              className="flex-1 sm:flex-none min-w-[120px]"
+            />
+          </div>
+        </div>
+        <DataTable name="User Management" table={table} density={density} />
+        <PaginationBar
+          className="mt-2"
+          currentPage={page}
+          totalPages={20}
+          onPageChange={setPage}
+          size={size}
+          onSizeChange={setSize}
+          totalElements={0}
+          numberOfElements={0}
+        />
+        <AdvancedFilter
+          fields={[
+            {
+              key: "id",
+              label: "User ID",
+              type: "number",
+              placeholder: "Enter user ID",
+              description: "Filter by user ID",
+            },
+            {
+              key: "username",
+              label: "Username",
+              type: "text",
+              placeholder: "Enter username",
+              description: "Filter by username",
+            },
+            {
+              key: "email",
+              label: "Email",
+              type: "text",
+              placeholder: "Enter email",
+              description: "Filter by email",
+            },
+            {
+              key: "createdAt",
+              label: "Created At",
+              type: "date",
+              placeholder: "Select date",
+              description: "Filter by creation date",
+            },
+          ]}
+          onApply={(v) => {
+            console.log(v);
+            setOpenFilter(false);
+          }}
+          open={openFilter}
+          onOpenChange={() => setOpenFilter(!openFilter)}
+        />
+      </main>
     </div>
   );
 };

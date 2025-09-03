@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PageResponseSchema } from "./global";
 
 export const UserResponseSchema = z.object({
   id: z.number(),
@@ -13,3 +14,7 @@ export const UserResponseSchema = z.object({
 });
 
 export type UserResponseType = z.infer<typeof UserResponseSchema>;
+
+export const UserPageSchema = PageResponseSchema(UserResponseSchema);
+
+export type UserPageType = z.infer<typeof UserPageSchema>;

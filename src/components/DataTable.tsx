@@ -12,22 +12,38 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import Empty from "@/assets/no_data.svg";
+import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 interface DataTableProps<TData> {
   name: string;
   table: TanStackTable<TData>;
+  density: "compact" | "normal" | "flexible";
 }
 
-export function DataTable<TData>({ name, table }: DataTableProps<TData>) {
+export function DataTable<TData>({
+  name,
+  table,
+  density,
+}: DataTableProps<TData>) {
+  useEffect(() => {
+    console.log(density);
+  }, [density]);
   return (
-    <div className="w-full p-4">
+    <div className="w-full">
       <Card className="pb-0 pt-4 gap-1">
         <CardHeader className="font-semibold text-xl text-zinc-800">
           {name}
         </CardHeader>
         <CardContent className="px-0">
           <div className="overflow-hidden border">
-            <Table>
+            <Table
+              className={cn({
+                "[&_td]:py-px [&_th]:py-px": density === "compact",
+                "[&_td]:py-1 [&_th]:py-1": density === "normal",
+                "[&_td]:py-2 [&_th]:py-1": density === "flexible",
+              })}
+            >
               <TableHeader className="bg-linear-to-r from-blue-400 to-purple-400 h-[50px]">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow
