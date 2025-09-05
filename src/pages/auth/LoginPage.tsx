@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { LoginRequestSchema, type LoginRequestType } from "../../types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -15,38 +14,54 @@ import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
-import { login } from "@/services/authService";
 import { Link } from "@tanstack/react-router";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
   REFRESH_TOKEN_STORAGE_KEY,
 } from "@/constants/appConstant";
+import type { ApiResponseVoid, LoginRequestDTO } from "@/gen/models";
+import { loginBody } from "@/gen/endpoints/authentication/authentication.zod";
+import { useLogin } from "@/gen/endpoints/authentication/authentication";
 
 export default function LoginPage() {
-  const form = useForm<LoginRequestType>({
+  const form = useForm<LoginRequestDTO>({
     defaultValues: {
       email: "",
       password: "",
     },
     mode: "onSubmit",
-    resolver: zodResolver(LoginRequestSchema),
+    resolver: zodResolver(loginBody),
   });
 
-  const onSubmit = (data: LoginRequestType) => {
-    login(data)
-      .then((res) => {
-        if (res.statusCode === 200) {
-          toast.success("Login successful!");
-          const accessToken = res.data?.accessToken as string;
-          const refreshToken = res.data?.refreshToken as string;
+  const loginMutation = useLogin({
+    mutation: {
+      onSuccess: (data) => {
+        toast.success("Login successful!");
+        const accessToken = data?.data?.accessToken;
+        const refreshToken = data?.data?.refreshToken;
+        if (accessToken) {
           localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+        }
+        if (refreshToken) {
           localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
         }
-      })
-      .catch((error) => {
-        toast.error(`Login failed: ${error.message}`);
-        console.error("Login error:", error);
-      });
+      },
+      onError: (error) => {
+        const apiError = error?.response?.data as ApiResponseVoid;
+        toast.error(apiError.error?.errorMessage);
+        if (apiError.error?.fieldErrors) {
+          apiError.error.fieldErrors.forEach((v) => {
+            form.setError(v.key as keyof LoginRequestDTO, {
+              message: v.message,
+            });
+          });
+        }
+      },
+    },
+  });
+
+  const onSubmit = (data: LoginRequestDTO) => {
+    loginMutation.mutate({ data });
   };
 
   return (

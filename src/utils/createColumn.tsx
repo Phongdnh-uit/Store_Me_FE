@@ -43,6 +43,22 @@ export function createColumnsFromSchema<T extends z.ZodRawShape>(
   return merged;
 }
 
+export function createColumnsFromType<TRow extends object>(
+  keys: (keyof TRow)[],
+  overrides: ColumnOverride<TRow>[] = [],
+): ColumnDef<TRow>[] {
+  const base = keys.map<AccessorColumnDef<TRow, unknown>>((key) => ({
+    id: key as string,
+    accessorKey: key as string,
+    header: String(key),
+  }));
+
+  return base.map((col) => {
+    const override = overrides.find((o) => o.key === col.id);
+    return override ? { ...col, ...override, id: override.key as string } : col;
+  });
+}
+
 export function createSelectionColumn<TData>(): ColumnDef<TData> {
   return {
     id: "select",

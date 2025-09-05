@@ -148,3 +148,16 @@
     @apply bg-zinc-50! text-zinc-900! text-[20px]! h-[72px]! w-full! rounded-[15px]! border! border-[var(--secondary-foreground)]!;
   }
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+div[data-slot="sidebar-inner"] {
+    @apply bg-transparent
+}

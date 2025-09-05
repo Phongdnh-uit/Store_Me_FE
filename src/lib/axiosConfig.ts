@@ -2,9 +2,8 @@ import {
   ACCESS_TOKEN_STORAGE_KEY,
   REFRESH_TOKEN_STORAGE_KEY,
 } from "@/constants/appConstant";
-import axios from "axios";
-import { refreshAccessToken } from "./authService";
-import type { LoginResponseType } from "@/types/auth";
+import axios, { AxiosError, type AxiosRequestConfig } from "axios";
+import { refreshToken as refreshTokenFn } from "@/gen/endpoints/authentication/authentication";
 
 const BACKEND_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:8080/api/v1";
@@ -16,7 +15,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
-    if (token) {
+    if (token && !publicEndpoints.includes(config.url || "")) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
@@ -30,15 +29,21 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      error.response?.data?.error?.errorCode === 1002 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
       if (refreshToken) {
         try {
-          const data = await refreshAccessToken({ refreshToken });
+          const data = await refreshTokenFn({ refreshToken });
           if (data?.data) {
-            const { accessToken, refreshToken: newRefreshToken } =
-              data.data as LoginResponseType;
+            const { accessToken, refreshToken: newRefreshToken } = data.data;
+            if (!accessToken || !newRefreshToken) {
+              throw new Error("Invalid tokens");
+            }
             localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
             localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, newRefreshToken);
 
@@ -58,4 +63,36 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export default axiosInstance;
+export const axiosInstanceFn = <T>(
+  config: AxiosRequestConfig,
+  options?: AxiosRequestConfig,
+): Promise<T> => {
+  const source = axios.CancelToken.source();
+  const promise = axiosInstance({
+    ...config,
+    cancelToken: source.token,
+    ...options,
+  }).then(({ data }) => data);
+
+  // @ts-expect-error: Property 'cancel' does not exist on type 'Promise<T>'.
+  promise.cancel = () => {
+    source.cancel("Request canceled");
+  };
+  return promise;
+};
+
+export type ErrorType<Error> = AxiosError<Error>;
+
+export type BodyType<BodyData> = BodyData;
+
+const publicEndpoints = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/refresh",
+  "/auth/verify-email",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/auth/registration/send-email",
+  "/oauth2/**",
+  "/2fa/verify-totp",
+];
