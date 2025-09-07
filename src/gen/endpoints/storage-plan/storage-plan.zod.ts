@@ -63,11 +63,13 @@ export const getAllStoragePlanQueryParams = zod.object({
  */
 export const createStoragePlanBodyStorageLimitMin = 0;
 
+export const createTimeOfPlanLimitMin = 1;
+
 
 export const createStoragePlanBody = zod.object({
   "name": zod.string().min(1),
   "price": zod.number(),
-  "timeOfPlan": zod.number(),
+  "timeOfPlan": zod.number().min(createTimeOfPlanLimitMin),
   "storageLimit": zod.number().min(createStoragePlanBodyStorageLimitMin),
   "description": zod.string().optional()
 })

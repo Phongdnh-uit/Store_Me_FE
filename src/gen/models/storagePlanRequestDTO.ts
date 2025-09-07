@@ -8,11 +8,12 @@
  */
 
 export interface StoragePlanRequestDTO {
-  /** @minLength 1 */
-  name: string;
-  price: number;
-  timeOfPlan: number;
-  /** @minimum 0 */
-  storageLimit: number;
-  description?: string;
+    /** @minLength 1 */
+    name: string;
+    price: number;
+    /** @minimum 1 */
+    timeOfPlan: number;
+    /** @minimum 0 */
+    storageLimit: number;
+    description?: string;
 }
