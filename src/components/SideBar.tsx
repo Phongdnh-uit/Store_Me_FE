@@ -25,32 +25,36 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                     "--sidebar-width": "19rem",
                 } as React.CSSProperties
             }
+            className="h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)]"
         >
-            <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
+            <div className="flex flex-1 h-full">
+                <AppSidebar className="relative h-full" />
+                <SidebarInset className="flex-1 overflow-y-auto">
+                    {children}
+                </SidebarInset>
+            </div>
         </SidebarProvider>
     );
 }
 
-// This is sample data.
 const data = {
     navMain: [
+        // {
+        //     title: "Getting Started",
+        //     url: "#",
+        //     items: [
+        //         {
+        //             title: "Installation",
+        //             url: "#",
+        //         },
+        //         {
+        //             title: "Project Structure",
+        //             url: "#",
+        //         },
+        //     ],
+        // },
         {
-            title: "Getting Started",
-            url: "#",
-            items: [
-                {
-                    title: "Installation",
-                    url: "#",
-                },
-                {
-                    title: "Project Structure",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Building Your Application",
+            title: "Manage Your App",
             url: "#",
             items: [
                 {
@@ -58,49 +62,8 @@ const data = {
                     url: "/manage/user",
                 },
                 {
-                    title: "Data Fetching",
-                    url: "#",
-                    isActive: true,
-                },
-                {
-                    title: "Rendering",
-                    url: "#",
-                },
-                {
-                    title: "Caching",
-                    url: "#",
-                },
-                {
-                    title: "Styling",
-                    url: "#",
-                },
-                {
-                    title: "Optimizing",
-                    url: "#",
-                },
-                {
-                    title: "Configuring",
-                    url: "#",
-                },
-                {
-                    title: "Testing",
-                    url: "#",
-                },
-                {
-                    title: "Authentication",
-                    url: "#",
-                },
-                {
-                    title: "Deploying",
-                    url: "#",
-                },
-                {
-                    title: "Upgrading",
-                    url: "#",
-                },
-                {
-                    title: "Examples",
-                    url: "#",
+                    title: "StoragePlans",
+                    url: "/manage/storage-plan",
                 },
             ],
         },

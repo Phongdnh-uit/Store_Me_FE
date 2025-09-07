@@ -36,19 +36,11 @@ export default function SearchBar({
         className={cn(
           "relative rounded-full pr-12 pl-5 py-2",
           "bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm",
-          "border border-blue-500/80 shadow-md",
+          "border border-blue-500/80",
           "placeholder:text-blue-300 dark:placeholder:text-purple-300",
           "focus:outline-none transition-all duration-300 focus-visible:border-blue-500",
           className,
         )}
-        style={{
-          // ring gradient hack
-          boxShadow: `
-            0 0 0 2px transparent,
-            0 0 6px rgba(59, 130, 246, 0.5),
-            0 0 12px rgba(139, 92, 246, 0.5)
-          `,
-        }}
         onFocus={(e) => {
           (e.target as HTMLInputElement).style.boxShadow = `
             0 0 0 2px transparent,

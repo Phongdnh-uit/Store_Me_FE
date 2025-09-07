@@ -64,7 +64,7 @@ export const UserListPage = () => {
         data: userList.data?.data?.content || [],
     });
     return (
-        <div className="relative min-h-screen">
+        <div className="relative size-full">
             {/* secondary ui */}
             <DeleteConfirmDialog
                 onConfirm={() => {
@@ -112,7 +112,7 @@ export const UserListPage = () => {
                 onOpenChange={() => setOpenFilter(!openFilter)}
             />
             {/* main ui */}
-            <main className="absolute inset-4 bg-white rounded-2xl shadow-md p-4 overflow-auto">
+            <main className="absolute inset-2 bg-white rounded-2xl shadow-md p-4 overflow-auto">
                 <PageTitle
                     name="Users Management"
                     breadcrumbList={[
