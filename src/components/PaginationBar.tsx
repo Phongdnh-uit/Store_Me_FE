@@ -37,8 +37,8 @@ export const PaginationBar = ({
       <CardContent className="w-full h-16 flex items-center justify-between">
         <div className="w-full">
           <Label>
-            Showing {(currentPage - 1) * size + 1} -{" "}
-            {(currentPage - 1) * size + 1 + numberOfElements} of {totalElements}
+            Showing {totalPages !== 0 ? (currentPage) * size + 1 : 0} -{" "}
+            {(currentPage) * size + numberOfElements} of {totalElements}
           </Label>
         </div>
         <PaginationTabs

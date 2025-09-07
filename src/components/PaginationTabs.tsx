@@ -21,32 +21,30 @@ export default function PaginationTabs({
     currentPage,
     onPageChange,
 }: PaginationTabsProps) {
-    if (totalPages < 1) return null;
-
     const generatePages = () => {
         const pages: (number | "ellipsis")[] = [];
         const delta = 2;
 
-        pages.push(1);
+        pages.push(0);
 
-        if (currentPage - delta > 2) {
+        if (currentPage - delta > 1) {
             pages.push("ellipsis");
         }
 
         for (
-            let i = Math.max(2, currentPage - delta);
-            i <= Math.min(totalPages - 1, currentPage + delta);
+            let i = Math.max(1, currentPage - delta);
+            i <= Math.min(totalPages - 2, currentPage + delta);
             i++
         ) {
             pages.push(i);
         }
 
-        if (currentPage + delta < totalPages - 1) {
+        if (currentPage + delta < totalPages - 2) {
             pages.push("ellipsis");
         }
 
         if (totalPages > 1) {
-            pages.push(totalPages);
+            pages.push(totalPages - 1); 
         }
 
         return pages;
@@ -62,11 +60,11 @@ export default function PaginationTabs({
                         href="#"
                         onClick={(e) => {
                             e.preventDefault();
-                            onPageChange(currentPage - 1 < 1 ? 1 : currentPage - 1);
+                            onPageChange(currentPage - 1 < 0 ? 0 : currentPage - 1);
                         }}
                         className={cn(
                             buttonVariants({ variant: "outlinePrimary" }),
-                            currentPage === 1 &&
+                            currentPage === 0 &&
                             "pointer-events-none border-blue-300 text-blue-300",
                         )}
                     />
@@ -94,7 +92,7 @@ export default function PaginationTabs({
                                     ["pointer-events-none"]: page === currentPage,
                                 })}
                             >
-                                {page}
+                                {page + 1 /* UI hiển thị 1-based */}
                             </PaginationLink>
                         </PaginationItem>
                     ),
@@ -106,12 +104,14 @@ export default function PaginationTabs({
                         onClick={(e) => {
                             e.preventDefault();
                             onPageChange(
-                                currentPage + 1 > totalPages ? totalPages : currentPage + 1,
+                                currentPage + 1 > totalPages - 1
+                                    ? totalPages - 1
+                                    : currentPage + 1,
                             );
                         }}
                         className={cn(
                             buttonVariants({ variant: "outlinePrimary" }),
-                            currentPage === totalPages &&
+                            (currentPage === totalPages-1 || totalPages === 0) &&
                             "pointer-events-none border-blue-300 text-blue-300",
                         )}
                     />

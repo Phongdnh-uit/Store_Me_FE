@@ -16,4 +16,7 @@ export interface UserRequestDTO {
   /** @minLength 1 */
   email: string;
   roleId: number;
+  /** @minLength 1 */
+  password: string;
+  status: "UNVERIFIED" | "ACTIVE" | "BLOCKED" | "DELETED";
 }

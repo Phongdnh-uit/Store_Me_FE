@@ -9,12 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
-import { Route as ManageUserIndexRouteImport } from './routes/manage/user/index'
+import { Route as AppManageUserIndexRouteImport } from './routes/_app/manage/user/index'
+import { Route as AppManageStoragePlanIndexRouteImport } from './routes/_app/manage/storage-plan/index'
+import { Route as AppManageUserCreateRouteImport } from './routes/_app/manage/user/create'
+import { Route as AppManageStoragePlanCreateRouteImport } from './routes/_app/manage/storage-plan/create'
+import { Route as AppManageUserUpdateIdRouteImport } from './routes/_app/manage/user/update.$id'
+import { Route as AppManageStoragePlanUpdateIdRouteImport } from './routes/_app/manage/storage-plan/update.$id'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/auth/reset-password',
   path: '/auth/reset-password',
@@ -35,33 +45,77 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ManageUserIndexRoute = ManageUserIndexRouteImport.update({
+const AppManageUserIndexRoute = AppManageUserIndexRouteImport.update({
   id: '/manage/user/',
   path: '/manage/user/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
+const AppManageStoragePlanIndexRoute =
+  AppManageStoragePlanIndexRouteImport.update({
+    id: '/manage/storage-plan/',
+    path: '/manage/storage-plan/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppManageUserCreateRoute = AppManageUserCreateRouteImport.update({
+  id: '/manage/user/create',
+  path: '/manage/user/create',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppManageStoragePlanCreateRoute =
+  AppManageStoragePlanCreateRouteImport.update({
+    id: '/manage/storage-plan/create',
+    path: '/manage/storage-plan/create',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppManageUserUpdateIdRoute = AppManageUserUpdateIdRouteImport.update({
+  id: '/manage/user/update/$id',
+  path: '/manage/user/update/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppManageStoragePlanUpdateIdRoute =
+  AppManageStoragePlanUpdateIdRouteImport.update({
+    id: '/manage/storage-plan/update/$id',
+    path: '/manage/storage-plan/update/$id',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/manage/user': typeof ManageUserIndexRoute
+  '/manage/storage-plan/create': typeof AppManageStoragePlanCreateRoute
+  '/manage/user/create': typeof AppManageUserCreateRoute
+  '/manage/storage-plan': typeof AppManageStoragePlanIndexRoute
+  '/manage/user': typeof AppManageUserIndexRoute
+  '/manage/storage-plan/update/$id': typeof AppManageStoragePlanUpdateIdRoute
+  '/manage/user/update/$id': typeof AppManageUserUpdateIdRoute
 }
 export interface FileRoutesByTo {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/manage/user': typeof ManageUserIndexRoute
+  '/manage/storage-plan/create': typeof AppManageStoragePlanCreateRoute
+  '/manage/user/create': typeof AppManageUserCreateRoute
+  '/manage/storage-plan': typeof AppManageStoragePlanIndexRoute
+  '/manage/user': typeof AppManageUserIndexRoute
+  '/manage/storage-plan/update/$id': typeof AppManageStoragePlanUpdateIdRoute
+  '/manage/user/update/$id': typeof AppManageUserUpdateIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_app': typeof AppRouteWithChildren
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/manage/user/': typeof ManageUserIndexRoute
+  '/_app/manage/storage-plan/create': typeof AppManageStoragePlanCreateRoute
+  '/_app/manage/user/create': typeof AppManageUserCreateRoute
+  '/_app/manage/storage-plan/': typeof AppManageStoragePlanIndexRoute
+  '/_app/manage/user/': typeof AppManageUserIndexRoute
+  '/_app/manage/storage-plan/update/$id': typeof AppManageStoragePlanUpdateIdRoute
+  '/_app/manage/user/update/$id': typeof AppManageUserUpdateIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -70,33 +124,56 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/manage/storage-plan/create'
+    | '/manage/user/create'
+    | '/manage/storage-plan'
     | '/manage/user'
+    | '/manage/storage-plan/update/$id'
+    | '/manage/user/update/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/manage/storage-plan/create'
+    | '/manage/user/create'
+    | '/manage/storage-plan'
     | '/manage/user'
+    | '/manage/storage-plan/update/$id'
+    | '/manage/user/update/$id'
   id:
     | '__root__'
+    | '/_app'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
-    | '/manage/user/'
+    | '/_app/manage/storage-plan/create'
+    | '/_app/manage/user/create'
+    | '/_app/manage/storage-plan/'
+    | '/_app/manage/user/'
+    | '/_app/manage/storage-plan/update/$id'
+    | '/_app/manage/user/update/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AppRoute: typeof AppRouteWithChildren
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
-  ManageUserIndexRoute: typeof ManageUserIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/reset-password': {
       id: '/auth/reset-password'
       path: '/auth/reset-password'
@@ -125,22 +202,77 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/manage/user/': {
-      id: '/manage/user/'
+    '/_app/manage/user/': {
+      id: '/_app/manage/user/'
       path: '/manage/user'
       fullPath: '/manage/user'
-      preLoaderRoute: typeof ManageUserIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppManageUserIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/manage/storage-plan/': {
+      id: '/_app/manage/storage-plan/'
+      path: '/manage/storage-plan'
+      fullPath: '/manage/storage-plan'
+      preLoaderRoute: typeof AppManageStoragePlanIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/manage/user/create': {
+      id: '/_app/manage/user/create'
+      path: '/manage/user/create'
+      fullPath: '/manage/user/create'
+      preLoaderRoute: typeof AppManageUserCreateRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/manage/storage-plan/create': {
+      id: '/_app/manage/storage-plan/create'
+      path: '/manage/storage-plan/create'
+      fullPath: '/manage/storage-plan/create'
+      preLoaderRoute: typeof AppManageStoragePlanCreateRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/manage/user/update/$id': {
+      id: '/_app/manage/user/update/$id'
+      path: '/manage/user/update/$id'
+      fullPath: '/manage/user/update/$id'
+      preLoaderRoute: typeof AppManageUserUpdateIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/manage/storage-plan/update/$id': {
+      id: '/_app/manage/storage-plan/update/$id'
+      path: '/manage/storage-plan/update/$id'
+      fullPath: '/manage/storage-plan/update/$id'
+      preLoaderRoute: typeof AppManageStoragePlanUpdateIdRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppManageStoragePlanCreateRoute: typeof AppManageStoragePlanCreateRoute
+  AppManageUserCreateRoute: typeof AppManageUserCreateRoute
+  AppManageStoragePlanIndexRoute: typeof AppManageStoragePlanIndexRoute
+  AppManageUserIndexRoute: typeof AppManageUserIndexRoute
+  AppManageStoragePlanUpdateIdRoute: typeof AppManageStoragePlanUpdateIdRoute
+  AppManageUserUpdateIdRoute: typeof AppManageUserUpdateIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppManageStoragePlanCreateRoute: AppManageStoragePlanCreateRoute,
+  AppManageUserCreateRoute: AppManageUserCreateRoute,
+  AppManageStoragePlanIndexRoute: AppManageStoragePlanIndexRoute,
+  AppManageUserIndexRoute: AppManageUserIndexRoute,
+  AppManageStoragePlanUpdateIdRoute: AppManageStoragePlanUpdateIdRoute,
+  AppManageUserUpdateIdRoute: AppManageUserUpdateIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
+  AppRoute: AppRouteWithChildren,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
-  ManageUserIndexRoute: ManageUserIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
