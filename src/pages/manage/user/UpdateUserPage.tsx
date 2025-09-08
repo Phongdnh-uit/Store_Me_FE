@@ -74,194 +74,186 @@ export const UpdateUserPage = () => {
         mutation.mutate({ id, data });
     };
     return (
-        <div className="relative min-h-screen">
-            <div className="absolute inset-4 bg-white rounded-2xl shadow-md p-4 overflow-auto">
-                <PageTitle
-                    name="Create User"
-                    breadcrumbList={[
-                        { name: "Home", href: "/" },
-                        { name: "Users", href: "/manage/user" },
-                        { name: "Create", href: "/manage/user/create" },
-                    ]}
-                />
-                <Card className="w-[500px] md:w-5xl mx-auto mt-20">
-                    <CardContent>
-                        <Form {...form}>
-                            <form
-                                onSubmit={form.handleSubmit(onSubmit)}
-                                className="space-y-4"
-                            >
-                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    <FormField
-                                        control={form.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="custom-required-label ml-2">
-                                                    email
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        className="custom-textbox"
-                                                        placeholder="Enter your email address"
-                                                    />
-                                                </FormControl>
-                                                <div className="min-h-[17px]">
-                                                    <FormMessage />
-                                                </div>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="username"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="custom-required-label ml-2">
-                                                    username
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        className="custom-textbox"
-                                                        placeholder="Enter your username"
-                                                    />
-                                                </FormControl>
-                                                <div className="min-h-[17px]">
-                                                    <FormMessage />
-                                                </div>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="password"
-                                        disabled={true}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="custom-required-label ml-2">
-                                                    password
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        className="custom-textbox pr-11"
-                                                        placeholder="Enter your password"
-                                                    />
-                                                </FormControl>
-                                                <div className="min-h-[17px]">
-                                                    <FormMessage />
-                                                </div>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="roleId"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="custom-required-label ml-2">
-                                                    role
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Select
-                                                        value={field.value ? "" + field.value : undefined}
-                                                        onValueChange={(v) => field.onChange(Number(v))}
+        <>
+            <PageTitle
+                name="Update User"
+                breadcrumbList={[
+                    { name: "Home", href: "/" },
+                    { name: "Users", href: "/manage/user" },
+                    { name: "Update", href: `/manage/user/update/${id}` },
+                ]}
+            />
+            <Card className="w-[500px] md:w-5xl mx-auto mt-20">
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="custom-required-label ml-2">
+                                                email
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    className="custom-textbox"
+                                                    placeholder="Enter your email address"
+                                                />
+                                            </FormControl>
+                                            <div className="min-h-[17px]">
+                                                <FormMessage />
+                                            </div>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="username"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="custom-required-label ml-2">
+                                                username
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    className="custom-textbox"
+                                                    placeholder="Enter your username"
+                                                />
+                                            </FormControl>
+                                            <div className="min-h-[17px]">
+                                                <FormMessage />
+                                            </div>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    disabled={true}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="custom-required-label ml-2">
+                                                password
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    className="custom-textbox pr-11"
+                                                    placeholder="Enter your password"
+                                                />
+                                            </FormControl>
+                                            <div className="min-h-[17px]">
+                                                <FormMessage />
+                                            </div>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="roleId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="custom-required-label ml-2">
+                                                role
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Select
+                                                    value={field.value ? "" + field.value : undefined}
+                                                    onValueChange={(v) => field.onChange(Number(v))}
+                                                >
+                                                    <SelectTrigger
+                                                        className="custom-textbox w-full"
+                                                        aria-invalid={
+                                                            form.formState.errors.roleId ? "true" : "false"
+                                                        }
                                                     >
-                                                        <SelectTrigger
-                                                            className="custom-textbox w-full"
-                                                            aria-invalid={
-                                                                form.formState.errors.roleId ? "true" : "false"
-                                                            }
-                                                        >
-                                                            <SelectValue
-                                                                placeholder="Select role"
-                                                                className="text-zinc-600"
-                                                            />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {listRole.data?.data?.content?.map((role) => (
-                                                                <SelectItem key={role.id} value={"" + role.id}>
-                                                                    {role.name}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </FormControl>
-                                                <div className="min-h-[17px]">
-                                                    <FormMessage />
-                                                </div>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="status"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="custom-required-label ml-2">
-                                                    status
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Select
-                                                        value={field.value ? field.value : undefined}
-                                                        onValueChange={(v) => field.onChange(v)}
+                                                        <SelectValue
+                                                            placeholder="Select role"
+                                                            className="text-zinc-600"
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {listRole.data?.data?.content?.map((role) => (
+                                                            <SelectItem key={role.id} value={"" + role.id}>
+                                                                {role.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <div className="min-h-[17px]">
+                                                <FormMessage />
+                                            </div>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="status"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="custom-required-label ml-2">
+                                                status
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Select
+                                                    value={field.value ? field.value : undefined}
+                                                    onValueChange={(v) => field.onChange(v)}
+                                                >
+                                                    <SelectTrigger
+                                                        className="custom-textbox w-full"
+                                                        aria-invalid={
+                                                            form.formState.errors.status ? "true" : "false"
+                                                        }
                                                     >
-                                                        <SelectTrigger
-                                                            className="custom-textbox w-full"
-                                                            aria-invalid={
-                                                                form.formState.errors.status ? "true" : "false"
-                                                            }
-                                                        >
-                                                            <SelectValue
-                                                                placeholder="Select role"
-                                                                className="text-zinc-600"
-                                                            />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {[
-                                                                "UNVERIFIED",
-                                                                "ACTIVE",
-                                                                "BLOCKED",
-                                                                "DELETED",
-                                                            ].map((status, idx) => (
+                                                        <SelectValue
+                                                            placeholder="Select role"
+                                                            className="text-zinc-600"
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {["UNVERIFIED", "ACTIVE", "BLOCKED", "DELETED"].map(
+                                                            (status, idx) => (
                                                                 <SelectItem key={idx} value={status}>
                                                                     {status}
                                                                 </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </FormControl>
-                                                <div className="min-h-[17px]">
-                                                    <FormMessage />
-                                                </div>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <div className="w-lg mx-auto">
-                                    <Button
-                                        variant={"primary"}
-                                        className="w-full h-14 rounded-xl text-lg"
-                                        type="submit"
-                                    >
-                                        Submit
-                                    </Button>
-                                </div>
-                            </form>
-                        </Form>
-                    </CardContent>
-                </Card>
-                <Button
-                    variant={"outlineSecondary"}
-                    className="w-lg mx-auto mt-4 rounded-xl text-lg h-14"
-                    onClick={() => navigate({ to: "/manage/user" })}
-                >
-                    <ArrowLeft />
-                    Back
-                </Button>
-            </div>
-        </div>
+                                                            ),
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <div className="min-h-[17px]">
+                                                <FormMessage />
+                                            </div>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <div className="w-lg mx-auto">
+                                <Button
+                                    variant={"primary"}
+                                    className="w-full h-14 rounded-xl text-lg"
+                                    type="submit"
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
+            <Button
+                variant={"outlineSecondary"}
+                className="w-lg mx-auto mt-4 rounded-xl text-lg h-14"
+                onClick={() => navigate({ to: "/manage/user" })}
+            >
+                <ArrowLeft />
+                Back
+            </Button>
+        </>
     );
 };
