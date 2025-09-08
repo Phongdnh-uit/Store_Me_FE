@@ -55,7 +55,7 @@ export const restoreNodeParams = zod.object({
   "id": zod.number()
 })
 
-export const createFolderBodyNameMin = 0;
+export const createFolderBodyNameMin = 1;
 
 export const createFolderBodyNameMax = 255;
 
