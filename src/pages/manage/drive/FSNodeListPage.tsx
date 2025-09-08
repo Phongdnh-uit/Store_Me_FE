@@ -1,15 +1,18 @@
 import { AdvancedFilter } from "@/components/AdvancedFilter";
 import { ColumnVisibilitySelect } from "@/components/ColumnVisibilitySelect";
-import { DataTable } from "@/components/DataTable";
 import DeleteConfirmDialog from "@/components/DeleteConfirm";
 import DensitySelect from "@/components/DensitySelect";
+import { SeparateTable } from "@/components/SeparateTable";
 import { MultiSortSelect, type SortRule } from "@/components/MultiSort";
 import { PageTitle } from "@/components/PageTitle";
 import { PaginationBar } from "@/components/PaginationBar";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
-import { useGetAllUser } from "@/gen/endpoints/user/user";
-import type { UserResponseDTO } from "@/gen/models";
+import {
+  useDeleteNode,
+  useGetAllNodes,
+} from "@/gen/endpoints/file-system/file-system";
+import type { FSResponseDTO, RoleResponseDTO } from "@/gen/models";
 import { useDataTable } from "@/hooks/useDataTable";
 import {
   createActionColumn,
@@ -19,24 +22,33 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { FileDown, Filter, RefreshCcw } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import CreateFolderModal from "./component/CreateFolderModal";
 
-export const UserListPage = () => {
-  const keys: (keyof UserResponseDTO)[] = [
-    "id",
-    "username",
-    "email",
-    "roleName",
-    "status",
+export const FSNodeListPage = () => {
+  const keys: (keyof FSResponseDTO)[] = [
+    "name",
+    "type",
+    "size",
     "createdAt",
     "updatedAt",
   ];
   const navigate = useNavigate();
-  const schemaColumns = createColumnsFromType<UserResponseDTO>(keys, []);
+  const schemaColumns = createColumnsFromType<FSResponseDTO>(keys, [
+    {
+      key: "createdAt",
+      cell: (row) => new Date(row.row.getValue("createdAt")).toLocaleString(),
+    },
+    {
+      key: "updatedAt",
+      cell: (row) => new Date(row.row.getValue("createdAt")).toLocaleString(),
+    },
+  ]);
   const columns = [
-    createSelectionColumn<UserResponseDTO>(),
+    createSelectionColumn<FSResponseDTO>(),
     ...schemaColumns,
-    createActionColumn<UserResponseDTO>({
-      onEdit: (row) => navigate({ to: `/manage/user/update/${row.id}` }),
+    createActionColumn<RoleResponseDTO>({
+      onEdit: (row) => navigate({ to: `/manage/drive/update/${row.id}` }),
       onCopy: (row) => navigator.clipboard.writeText(JSON.stringify(row)),
       onDelete: (row) => setDeleteDialog({ open: true, id: row.id }),
     }),
@@ -53,22 +65,35 @@ export const UserListPage = () => {
     id?: number;
     loading?: boolean;
   }>({ open: false });
-  const userList = useGetAllUser({
+  const list = useGetAllNodes({
+    parentId: undefined,
     size: pagination.size,
-    page: pagination.page,
+    page: pagination.page - 1,
     sort: sorts.map((s) => `${s.key},${s.direction}`),
     filter: "",
   });
-  const { table, density, setDensity } = useDataTable<UserResponseDTO>({
+  const deleteMutation = useDeleteNode({
+    mutation: {
+      onSuccess: () => {
+        toast.success("Role deleted successfully");
+        list.refetch();
+      },
+      onError: (error) => {
+        toast.error(`Error deleting role: ${error.message}`);
+      },
+    },
+  });
+  const { table, density, setDensity } = useDataTable<RoleResponseDTO>({
     columns,
-    data: userList.data?.data?.content || [],
+    data: list.data?.data?.content || [],
   });
   return (
     <>
       {/* secondary ui */}
       <DeleteConfirmDialog
         onConfirm={() => {
-          console.log("Deleting user with ID:", deleteDialog.id);
+          if (!deleteDialog.id) return;
+          deleteMutation.mutate({ id: deleteDialog.id });
         }}
         open={deleteDialog.open}
         onOpenChange={(val) => setDeleteDialog({ ...deleteDialog, open: val })}
@@ -113,21 +138,19 @@ export const UserListPage = () => {
       />
       {/* main ui */}
       <PageTitle
-        name="Users Management"
+        name="Role Management"
         breadcrumbList={[
           { name: "Home", href: "/" },
-          { name: "Users", href: "/manage/user" },
+          { name: "Role", href: "/manage/role" },
         ]}
       />
       <div className="flex justify-between items-center mb-4">
         <div></div>
-        <Button
-          className="relative overflow-hidden group bg-blue-500 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 transition-all ease-out duration-300 h-10 cursor-pointer"
-          onClick={() => navigate({ to: "/manage/user/create" })}
-        >
-          <span className="absolute right-0 w-8 h-32 -mt-12 bg-white opacity-10 rotate-12 translate-x-12 transition-all duration-1000 ease group-hover:-translate-x-40"></span>
-          <span className="relative font-semibold">Add user</span>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant={"outlineSecondary"}>Upload</Button>
+          {/* <Button variant={"outlinePrimary"}>Create folder</Button> */}
+          <CreateFolderModal />
+        </div>
       </div>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 w-full">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 flex-1">
@@ -158,7 +181,7 @@ export const UserListPage = () => {
             variant="outlinePrimary"
             size="lg"
             className="sm:flex-none min-w-[50px]"
-            onClick={() => userList.refetch()}
+            onClick={() => list.refetch()}
           >
             <RefreshCcw className="size-5" />
           </Button>
@@ -183,16 +206,19 @@ export const UserListPage = () => {
           />
         </div>
       </div>
-      <DataTable name="User Management" table={table} density={density} />
+      <SeparateTable
+        columnWidths={{ select: "50px", actions: "50px", name: "3fr" }}
+        table={table}
+      />
       <PaginationBar
         className="mt-2"
         currentPage={pagination.page}
-        totalPages={userList.data?.data?.totalPages || 0}
+        totalPages={list.data?.data?.totalPages || 0}
         onPageChange={(page) => setPagination({ ...pagination, page })}
         size={pagination.size}
         onSizeChange={(size) => setPagination({ page: 0, size })}
-        totalElements={userList.data?.data?.totalElements || 0}
-        numberOfElements={userList.data?.data?.numberOfElements || 0}
+        totalElements={list.data?.data?.totalElements || 0}
+        numberOfElements={list.data?.data?.numberOfElements || 0}
       />
     </>
   );

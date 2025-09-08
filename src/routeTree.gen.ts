@@ -16,8 +16,10 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AppManageUserIndexRouteImport } from './routes/_app/manage/user/index'
 import { Route as AppManageStoragePlanIndexRouteImport } from './routes/_app/manage/storage-plan/index'
+import { Route as AppManageRoleIndexRouteImport } from './routes/_app/manage/role/index'
 import { Route as AppManageUserCreateRouteImport } from './routes/_app/manage/user/create'
 import { Route as AppManageStoragePlanCreateRouteImport } from './routes/_app/manage/storage-plan/create'
+import { Route as AppManageDriveIdRouteImport } from './routes/_app/manage/drive/$id'
 import { Route as AppManageUserUpdateIdRouteImport } from './routes/_app/manage/user/update.$id'
 import { Route as AppManageStoragePlanUpdateIdRouteImport } from './routes/_app/manage/storage-plan/update.$id'
 
@@ -56,6 +58,11 @@ const AppManageStoragePlanIndexRoute =
     path: '/manage/storage-plan/',
     getParentRoute: () => AppRoute,
   } as any)
+const AppManageRoleIndexRoute = AppManageRoleIndexRouteImport.update({
+  id: '/manage/role/',
+  path: '/manage/role/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppManageUserCreateRoute = AppManageUserCreateRouteImport.update({
   id: '/manage/user/create',
   path: '/manage/user/create',
@@ -67,6 +74,11 @@ const AppManageStoragePlanCreateRoute =
     path: '/manage/storage-plan/create',
     getParentRoute: () => AppRoute,
   } as any)
+const AppManageDriveIdRoute = AppManageDriveIdRouteImport.update({
+  id: '/manage/drive/$id',
+  path: '/manage/drive/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppManageUserUpdateIdRoute = AppManageUserUpdateIdRouteImport.update({
   id: '/manage/user/update/$id',
   path: '/manage/user/update/$id',
@@ -84,8 +96,10 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/manage/drive/$id': typeof AppManageDriveIdRoute
   '/manage/storage-plan/create': typeof AppManageStoragePlanCreateRoute
   '/manage/user/create': typeof AppManageUserCreateRoute
+  '/manage/role': typeof AppManageRoleIndexRoute
   '/manage/storage-plan': typeof AppManageStoragePlanIndexRoute
   '/manage/user': typeof AppManageUserIndexRoute
   '/manage/storage-plan/update/$id': typeof AppManageStoragePlanUpdateIdRoute
@@ -96,8 +110,10 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/manage/drive/$id': typeof AppManageDriveIdRoute
   '/manage/storage-plan/create': typeof AppManageStoragePlanCreateRoute
   '/manage/user/create': typeof AppManageUserCreateRoute
+  '/manage/role': typeof AppManageRoleIndexRoute
   '/manage/storage-plan': typeof AppManageStoragePlanIndexRoute
   '/manage/user': typeof AppManageUserIndexRoute
   '/manage/storage-plan/update/$id': typeof AppManageStoragePlanUpdateIdRoute
@@ -110,8 +126,10 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/_app/manage/drive/$id': typeof AppManageDriveIdRoute
   '/_app/manage/storage-plan/create': typeof AppManageStoragePlanCreateRoute
   '/_app/manage/user/create': typeof AppManageUserCreateRoute
+  '/_app/manage/role/': typeof AppManageRoleIndexRoute
   '/_app/manage/storage-plan/': typeof AppManageStoragePlanIndexRoute
   '/_app/manage/user/': typeof AppManageUserIndexRoute
   '/_app/manage/storage-plan/update/$id': typeof AppManageStoragePlanUpdateIdRoute
@@ -124,8 +142,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/manage/drive/$id'
     | '/manage/storage-plan/create'
     | '/manage/user/create'
+    | '/manage/role'
     | '/manage/storage-plan'
     | '/manage/user'
     | '/manage/storage-plan/update/$id'
@@ -136,8 +156,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/manage/drive/$id'
     | '/manage/storage-plan/create'
     | '/manage/user/create'
+    | '/manage/role'
     | '/manage/storage-plan'
     | '/manage/user'
     | '/manage/storage-plan/update/$id'
@@ -149,8 +171,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/_app/manage/drive/$id'
     | '/_app/manage/storage-plan/create'
     | '/_app/manage/user/create'
+    | '/_app/manage/role/'
     | '/_app/manage/storage-plan/'
     | '/_app/manage/user/'
     | '/_app/manage/storage-plan/update/$id'
@@ -216,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppManageStoragePlanIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/manage/role/': {
+      id: '/_app/manage/role/'
+      path: '/manage/role'
+      fullPath: '/manage/role'
+      preLoaderRoute: typeof AppManageRoleIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/manage/user/create': {
       id: '/_app/manage/user/create'
       path: '/manage/user/create'
@@ -228,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/manage/storage-plan/create'
       fullPath: '/manage/storage-plan/create'
       preLoaderRoute: typeof AppManageStoragePlanCreateRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/manage/drive/$id': {
+      id: '/_app/manage/drive/$id'
+      path: '/manage/drive/$id'
+      fullPath: '/manage/drive/$id'
+      preLoaderRoute: typeof AppManageDriveIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/manage/user/update/$id': {
@@ -248,8 +286,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppManageDriveIdRoute: typeof AppManageDriveIdRoute
   AppManageStoragePlanCreateRoute: typeof AppManageStoragePlanCreateRoute
   AppManageUserCreateRoute: typeof AppManageUserCreateRoute
+  AppManageRoleIndexRoute: typeof AppManageRoleIndexRoute
   AppManageStoragePlanIndexRoute: typeof AppManageStoragePlanIndexRoute
   AppManageUserIndexRoute: typeof AppManageUserIndexRoute
   AppManageStoragePlanUpdateIdRoute: typeof AppManageStoragePlanUpdateIdRoute
@@ -257,8 +297,10 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppManageDriveIdRoute: AppManageDriveIdRoute,
   AppManageStoragePlanCreateRoute: AppManageStoragePlanCreateRoute,
   AppManageUserCreateRoute: AppManageUserCreateRoute,
+  AppManageRoleIndexRoute: AppManageRoleIndexRoute,
   AppManageStoragePlanIndexRoute: AppManageStoragePlanIndexRoute,
   AppManageUserIndexRoute: AppManageUserIndexRoute,
   AppManageStoragePlanUpdateIdRoute: AppManageStoragePlanUpdateIdRoute,
