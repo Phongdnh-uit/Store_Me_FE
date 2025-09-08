@@ -31,7 +31,7 @@ export const CreateStoragePlanPage = () => {
         },
         resolver: zodResolver(createStoragePlanBody),
     });
-    const createUser = useCreateStoragePlan({
+    const mutation = useCreateStoragePlan({
         mutation: {
             onSuccess: () => {
                 form.reset();
@@ -53,144 +53,167 @@ export const CreateStoragePlanPage = () => {
         },
     });
     const onSubmit = (data: StoragePlanRequestDTO) => {
-        createUser.mutate({ data });
+        mutation.mutate({ data });
     };
     return (
-        <div className="relative min-h-screen">
-            <div className="absolute inset-4 bg-white rounded-2xl shadow-md p-4 overflow-auto">
-                <PageTitle
-                    name="Create Storage Plan"
-                    breadcrumbList={[
-                        { name: "Home", href: "/" },
-                        { name: "Storage Plan", href: "/manage/storage-plan" },
-                        { name: "Create", href: "/manage/storage-plan/create" },
-                    ]}
-                />
-                <div className="flex flex-col items-center justify-center">
-                    <Card className="w-[500px] sm:w-5xl mx-auto mt-10">
-                        <CardContent>
-                            <Form {...form}>
-                                <form
-                                    onSubmit={form.handleSubmit(onSubmit)}
-                                    className="space-y-4"
-                                >
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <FormField
-                                            control={form.control}
-                                            name="name"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="custom-required-label ml-2">
-                                                        name
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            {...field}
-                                                            className="custom-textbox"
-                                                            placeholder="Enter storage plan name"
-                                                        />
-                                                    </FormControl>
-                                                    <div className="min-h-[17px]">
-                                                        <FormMessage />
-                                                    </div>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="storageLimit"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="custom-required-label ml-2">
-                                                        Storage Limit
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            className="custom-textbox"
-                                                            placeholder="Enter storage limit"
-                                                            {...field}
-                                                            onChange={(e) =>
-                                                                field.onChange(e.target.valueAsNumber)
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <div className="min-h-[17px]">
-                                                        <FormMessage />
-                                                    </div>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="timeOfPlan"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="custom-required-label ml-2">
-                                                        Time of Plan (day)
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            {...field}
-                                                            onChange={(e) =>
-                                                                field.onChange(e.target.valueAsNumber)
-                                                            }
-                                                            className="custom-textbox pr-11"
-                                                            placeholder="Enter time of plan"
-                                                        />
-                                                    </FormControl>
-                                                    <div className="min-h-[17px]">
-                                                        <FormMessage />
-                                                    </div>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="description"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="custom-required-label ml-2">
-                                                        description
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            {...field}
-                                                            className="custom-textbox pr-11"
-                                                            placeholder="Enter description"
-                                                        />
-                                                    </FormControl>
-                                                    <div className="min-h-[17px]">
-                                                        <FormMessage />
-                                                    </div>
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                    <div className="w-lg mx-auto">
-                                        <Button
-                                            variant={"primary"}
-                                            className="w-full h-14 rounded-xl text-lg"
-                                            type="submit"
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                </form>
-                            </Form>
-                        </CardContent>
-                    </Card>
-                    <Button
-                        variant={"outlineSecondary"}
-                        className="mt-4 w-lg rounded-xl text-lg h-14"
-                        onClick={() => navigate({ to: "/manage/storage-plan" })}
-                    >
-                        <ArrowLeft />
-                        Back
-                    </Button>
-                </div>
+        <>
+            <PageTitle
+                name="Create Storage Plan"
+                breadcrumbList={[
+                    { name: "Home", href: "/" },
+                    { name: "Storage Plan", href: "/manage/storage-plan" },
+                    { name: "Create", href: "/manage/storage-plan/create" },
+                ]}
+            />
+            <div className="flex flex-col items-center justify-center">
+                <Card className="w-[500px] sm:w-5xl mx-auto mt-10">
+                    <CardContent>
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-4"
+                            >
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="custom-required-label ml-2">
+                                                    Name
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        className="custom-textbox"
+                                                        placeholder="Enter storage plan name"
+                                                    />
+                                                </FormControl>
+                                                <div className="min-h-[17px]">
+                                                    <FormMessage />
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="storageLimit"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="custom-required-label ml-2">
+                                                    Storage Limit
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(e.target.valueAsNumber)
+                                                        }
+                                                        className="custom-textbox"
+                                                        placeholder="Enter storage limit"
+                                                    />
+                                                </FormControl>
+                                                <div className="min-h-[17px]">
+                                                    <FormMessage />
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="timeOfPlan"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="custom-required-label ml-2">
+                                                    Time of Plan (day)
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(e.target.valueAsNumber)
+                                                        }
+                                                        className="custom-textbox pr-11"
+                                                        placeholder="Enter time of plan"
+                                                    />
+                                                </FormControl>
+                                                <div className="min-h-[17px]">
+                                                    <FormMessage />
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="price"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="custom-required-label ml-2">
+                                                    Price
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(e.target.valueAsNumber)
+                                                        }
+                                                        className="custom-textbox pr-11"
+                                                        placeholder="Enter price"
+                                                    />
+                                                </FormControl>
+                                                <div className="min-h-[17px]">
+                                                    <FormMessage />
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem className="col-span-1 md:col-span-2">
+                                                <FormLabel className="custom-required-label ml-2">
+                                                    Description
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        className="custom-textbox pr-11"
+                                                        placeholder="Enter description"
+                                                    />
+                                                </FormControl>
+                                                <div className="min-h-[17px]">
+                                                    <FormMessage />
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <div className="w-lg mx-auto">
+                                    <Button
+                                        variant={"primary"}
+                                        className="w-full h-14 rounded-xl text-lg"
+                                        type="submit"
+                                    >
+                                        Submit
+                                    </Button>
+                                </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+                <Button
+                    variant={"outlineSecondary"}
+                    className="mt-4 w-lg rounded-xl text-lg h-14"
+                    onClick={() => navigate({ to: "/manage/storage-plan" })}
+                >
+                    <ArrowLeft />
+                    Back
+                </Button>
             </div>
-        </div>
+        </>
     );
 };

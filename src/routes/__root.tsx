@@ -11,7 +11,7 @@ function RootComponent() {
     return (
         <React.Fragment>
             <Outlet />
-            <TanStackRouterDevtools initialIsOpen={false} />
+            <TanStackRouterDevtools initialIsOpen={false}/>
             <ReactQueryDevtools initialIsOpen={false} />
         </React.Fragment>
     );
