@@ -20,9 +20,8 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {toast} from "react-toastify";
 import {motion} from "motion/react";
 import {Separator} from "@/components/ui/separator.tsx";
-import { useNavigate } from "@tanstack/react-router"
+import {Link} from "@tanstack/react-router"
 export default function SingupPage(){
-    const navigate = useNavigate();
     const form = useForm<SignupRequestType>({
         defaultValues:{
             fullname: "",
@@ -135,7 +134,7 @@ return (
                                 whileTap={{ scale: 0.975 }}
                             >
                                 <Button className="custom-primary-button" type="submit">
-                                    Log in
+                                    Sign up
                                 </Button>
                             </motion.button>
                         </form>
@@ -150,9 +149,9 @@ return (
                             initial="rest"
                             whileHover="hover"
                         >
-                <a onClick={() => navigate({ to: "/auth/login" })} className="text-[var(--primary-blue)] text-[20px]">
+                    <Link to={"/auth/login"} className="text-[var(--primary-blue)] text-[20px]">
                   Login now
-                </a>
+                </Link>
                             <motion.div
                                 variants={{
                                     rest: { width: 0 },
