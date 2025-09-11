@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { LoginRequestSchema, type LoginRequestType } from "../../types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -15,27 +14,54 @@ import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
+import { Link } from "@tanstack/react-router";
+import {
+  ACCESS_TOKEN_STORAGE_KEY,
+  REFRESH_TOKEN_STORAGE_KEY,
+} from "@/constants/appConstant";
+import type { ApiResponseVoid, LoginRequestDTO } from "@/gen/models";
+import { loginBody } from "@/gen/endpoints/authentication/authentication.zod";
+import { useLogin } from "@/gen/endpoints/authentication/authentication";
 
 export default function LoginPage() {
-  const form = useForm<LoginRequestType>({
+  const form = useForm<LoginRequestDTO>({
     defaultValues: {
       email: "",
       password: "",
     },
     mode: "onSubmit",
-    resolver: zodResolver(LoginRequestSchema),
+    resolver: zodResolver(loginBody),
   });
 
-  const onSubmit = (data: LoginRequestType) => {
-    if (data.email === "admin@gmail.com" && data.password === "admin123") {
-      toast.success("Login successful!", {
-        position: "top-center",
-      });
-    } else {
-      toast.error("Invalid email or password. Please try again.", {
-        position: "top-center",
-      });
-    }
+  const loginMutation = useLogin({
+    mutation: {
+      onSuccess: (data) => {
+        toast.success("Login successful!");
+        const accessToken = data?.data?.accessToken;
+        const refreshToken = data?.data?.refreshToken;
+        if (accessToken) {
+          localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+        }
+        if (refreshToken) {
+          localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
+        }
+      },
+      onError: (error) => {
+        const apiError = error?.response?.data as ApiResponseVoid;
+        toast.error(apiError.error?.errorMessage);
+        if (apiError.error?.fieldErrors) {
+          apiError.error.fieldErrors.forEach((v) => {
+            form.setError(v.key as keyof LoginRequestDTO, {
+              message: v.message,
+            });
+          });
+        }
+      },
+    },
+  });
+
+  const onSubmit = (data: LoginRequestDTO) => {
+    loginMutation.mutate({ data });
   };
 
   return (
@@ -85,7 +111,7 @@ export default function LoginPage() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="custom-textbox"
+                          className="custom-textbox pr-11"
                           placeholder="Enter your password"
                         />
                       </FormControl>
@@ -125,12 +151,9 @@ export default function LoginPage() {
                 Forgot Password?{" "}
               </span>
               <motion.div
-                variants={{
-                  rest: { width: 0 },
-                  hover: { width: "100%" },
-                }}
+                variants={drawLineVariants}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="absolute bottom-0 left-0 h-[2px] bg-[var(--primary-blue)]"
+                className="absolute bottom-0 left-1/2 translate-x-[-50%] h-[2px] bg-[var(--primary-blue)]"
               />
             </motion.div>
             <Separator className="mt-3" />
@@ -143,16 +166,16 @@ export default function LoginPage() {
                 initial="rest"
                 whileHover="hover"
               >
-                <span className="text-[var(--primary-blue)] text-[20px]">
+                <Link
+                  to={"/auth/register"}
+                  className="text-[var(--primary-blue)] text-[20px]"
+                >
                   Sign Up
-                </span>
+                </Link>
                 <motion.div
-                  variants={{
-                    rest: { width: 0 },
-                    hover: { width: "100%" },
-                  }}
+                  variants={drawLineVariants}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute bottom-0 left-0 h-[2px] bg-[var(--primary-blue)]"
+                  className="absolute bottom-0 left-1/2 translate-x-[-50%] h-[2px] bg-[var(--primary-blue)]"
                 />
               </motion.div>
             </div>
@@ -163,3 +186,8 @@ export default function LoginPage() {
     </div>
   );
 }
+
+const drawLineVariants = {
+  rest: { width: 0 },
+  hover: { width: "100%" },
+};

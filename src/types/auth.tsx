@@ -12,3 +12,10 @@ export const SignupRequestSchema = z.object({
     password: z.string().min(6,"Them loi sau"),
 });
 export type SignupRequestType = z.infer<typeof SignupRequestSchema>;
+
+export const LoginResponseSchema = z.object({
+    accessToken: z.string(),
+    refreshToken: z.string(),
+});
+
+export type LoginResponseType = z.infer<typeof LoginResponseSchema>;

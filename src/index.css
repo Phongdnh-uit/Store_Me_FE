@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -115,7 +116,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-medium;
   }
 }
 
@@ -124,6 +125,11 @@
   --primary-blue: #1e77f8;
   --background: #d8dadf;
   --secondary-foreground: #6c778f;
+}
+
+@theme {
+  --font-sans: "Montserrat", sans-serif;
+  --font-heading: "Montserrat", sans-serif;
 }
 
 @layer components {
@@ -141,4 +147,17 @@
   .custom-outline-button {
     @apply bg-zinc-50! text-zinc-900! text-[20px]! h-[72px]! w-full! rounded-[15px]! border! border-[var(--secondary-foreground)]!;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+div[data-slot="sidebar-inner"] {
+    @apply bg-transparent
 }
